@@ -1,12 +1,22 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import styles from '../styles/Home.module.css'
 
 export const config = {
   runtime: 'experimental-edge',
 }
 
-function Home({ data }) {
+function Home() {
+  const [data, setData] = useState({});
+
+  useEffect(() => {
+    fetch('/api/hello')
+    .then(response =>  response.json())
+    .then(response => setData(response) );
+  }, []);
+
+
   return (
     <div className={styles.container}>
       <Head>
@@ -16,7 +26,7 @@ function Home({ data }) {
       </Head>
 
       <main className={styles.main}>
-          <h1> { data.logradouro }, {data.bairro} - { data.localidade } / {data.uf} </h1>
+          <h1> { data?.logradouro }, {data?.bairro} - { data?.localidade } / {data?.uf} </h1>
       </main>
 
       <footer className={styles.footer}>
@@ -26,14 +36,14 @@ function Home({ data }) {
 }
 
 // This gets called on every request
-export async function getServerSideProps() {
-  // Fetch data from external API
-  const res = await fetch(`https://viacep.com.br/ws/31310520/json/`);
-  const data =  await res.json();
+// export async function getServerSideProps() {
+//   // Fetch data from external API
+//   const res = await fetch(`http://localhost:3000/api/hello`);
+//   const data =  await res.json();
 
-  // Pass data to the page via props
-  return { props: { data } }
-}
+//   // Pass data to the page via props
+//   return { props: { data } }
+// }
 
 
 export default Home;
